@@ -23,16 +23,15 @@ class LogisticRegressionEP34:
         return 1 / (1 + np.exp(-z))
 
     def loss(self, X, y):
-        y_predict = self.predict(X)
-        y_predict = np.clip(y_predict, 1e-15, 1 - 1e-15)  # Clip predictions to avoid log(0)
-        loss_sum = np.sum(y * np.log(y_predict) + (1 - y) * np.log(1 - y_predict))
-        return (-1 / len(y)) * loss_sum
+        p = self.predict(X)
+        return -np.mean(y * np.log(p) + (1 - y) * np.log(1 - p))
+
+
         
     def backward(self, X, y):
-        y_predict = self.predict(X)
-        diff = y_predict - y
-        self.l_grad_w = (-1 / self.N) * X.T @ diff
-        self.l_grad_b = (-1 / self.N) * np.sum(diff)
+        p = self.predict(X)
+        self.l_grad_w = -np.mean((y - p)[:, np.newaxis] * X, axis=0)
+        self.l_grad_b = -np.mean(y - p)
 
     def step(self):
         self.w -= self.lr * self.l_grad_w
@@ -96,5 +95,3 @@ class LogisticRegressionEP34:
         yline = (self.w[0]*xline + self.b) / (-self.w[1])
         plt.plot(xline, yline, 'b')
         plt.show()
-
-

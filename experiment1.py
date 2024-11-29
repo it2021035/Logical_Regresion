@@ -2,25 +2,20 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
-import logistic_regression as lr
+from logistic_regression import LogisticRegressionEP34
 from generate_dataset import generate_binary_problem
 
 # Convert centers to a numpy array
-centers = np.array([[0, 0], [8, 8]])
+centers = np.array([[0, 8], [0, 8]])
 
 # Generate dataset
-X, y = generate_binary_problem(centers=centers, N=1000)
+X, y = generate_binary_problem(centers, N=1000)
 
 # Split the dataset into 70% training and 30% testing
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Normalize the features
-scaler = StandardScaler()
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
 # Initialize the logistic regression model
-model = lr.LogisticRegressionEP34()
+model = LogisticRegressionEP34()
 
 # Train the model
 model.fit(X_train, y_train, iterations=10000, batch_size=None, show_step=1000, show_line=True)
